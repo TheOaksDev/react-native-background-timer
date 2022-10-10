@@ -23,6 +23,7 @@ class BackgroundTimer {
         } else {
           RNBackgroundTimer.setTimeout(id, this.callbacks[id].timeout);
         }
+        this.callbacks[id].timerValue = this.callbacks[id].timeout + this.callbacks[id].timerValue;
         callback();
       }
     });
@@ -72,6 +73,7 @@ class BackgroundTimer {
       callback,
       interval: false,
       timeout,
+      timerValue: 0,
     };
     RNBackgroundTimer.setTimeout(timeoutId, timeout);
     return timeoutId;
@@ -91,9 +93,19 @@ class BackgroundTimer {
       callback,
       interval: true,
       timeout,
+      timerValue: 0,
     };
     RNBackgroundTimer.setTimeout(intervalId, timeout);
     return intervalId;
+  }
+
+  getTimerValue(intervalId) {
+    if (this.callbacks[intervalId]) {
+      const value = this.callbacks[intervalId].timerValue;
+      return value;
+    } else {
+      return -1;
+    }
   }
 
   clearInterval(intervalId) {
@@ -105,3 +117,4 @@ class BackgroundTimer {
 }
 
 export default new BackgroundTimer();
+
